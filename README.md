@@ -1,7 +1,7 @@
 # Ping Tree Lead Distribution
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/graymatterlabs/pingtree.svg?style=flat-square)](https://packagist.org/packages/graymatterlabs/pingtree)
-[![Tests](https://github.com/graymatterlabs/pingtree/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/graymatterlabs/pingtree/actions/workflows/run-tests.yml)
+[![Tests](https://github.com/graymatterlabs/pingtree/actions/workflows/run-tests.yml/badge.svg?branch=master)](https://github.com/graymatterlabs/pingtree/actions/workflows/run-tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/graymatterlabs/pingtree.svg?style=flat-square)](https://packagist.org/packages/graymatterlabs/pingtree)
 
 A Ping Tree is a process in which a single lead is offered to multiple buyers in real-time and sold to the highest bidder.
