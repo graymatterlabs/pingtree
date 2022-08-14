@@ -28,7 +28,7 @@ trait HasEvents
         }
     }
 
-    public function getMethodForEvent(string $event): string
+    protected function getMethodForEvent(string $event): string
     {
         return 'handle' . implode('', array_map(fn ($value) => ucfirst($value), explode('.', $event)));
     }
