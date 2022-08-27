@@ -24,8 +24,14 @@ class RoundRobin implements Strategy
             $priority = $offers;
         }
 
-        $offer = array_reduce($priority, function (Offer $previous, Offer $offer) use ($lead) {
-            return $previous->ping($lead) > $offer->ping($lead)
+        $offer = array_reduce($priority, function (?Offer $previous, Offer $offer) use ($lead) {
+            if (is_null($previous)) {
+                $offer->ping($lead);
+
+                return $offer;
+            }
+
+            return $previous > $offer->ping($lead)
                 ? $previous
                 : $offer;
         });
