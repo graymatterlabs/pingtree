@@ -10,7 +10,6 @@ use GrayMatterLabs\PingTree\Tests\Mocks\MockOffer;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockResponse;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockStrategy;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockTree;
-use GrayMatterLabs\PingTree\Tree;
 use PHPUnit\Framework\TestCase;
 
 class TreeTest extends TestCase
@@ -59,7 +58,7 @@ class TreeTest extends TestCase
         $lead = new MockLead('hash');
 
         $tree = $this->getTree([
-            new MockOffer('offer-name', new MockResponse(), ineligible: [$lead->getHash()]),
+            new MockOffer('offer-name', new MockResponse(), ineligible: [$lead->getIdentifier()]),
         ]);
 
         $this->expectException(NoOffersException::class);
@@ -88,7 +87,7 @@ class TreeTest extends TestCase
         $lead = new MockLead('hash');
 
         $offers = [
-            new MockOffer('offer-name', new MockResponse(), ineligible: [$lead->getHash()]),
+            new MockOffer('offer-name', new MockResponse(), ineligible: [$lead->getIdentifier()]),
             new MockOffer('offer-name', new MockResponse()),
         ];
 
@@ -134,7 +133,7 @@ class TreeTest extends TestCase
         $tree->ping($lead);
     }
 
-    protected function getTree(array $offers = []): Tree
+    protected function getTree(array $offers = []): MockTree
     {
         return new MockTree(new MockStrategy(), $offers);
     }

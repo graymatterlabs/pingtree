@@ -11,7 +11,7 @@ A Ping Tree is a process in which a single lead is offered to multiple buyers in
 You can install the package via composer:
 
 ```bash
-composer require graymatterlabs/pingtree:^0.1
+composer require graymatterlabs/pingtree:^0.3
 ```
 
 ## Usage

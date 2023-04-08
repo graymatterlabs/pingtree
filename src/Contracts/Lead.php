@@ -7,11 +7,11 @@ namespace GrayMatterLabs\PingTree\Contracts;
 interface Lead
 {
     /**
-     * Get the hash representing the lead.
+     * Get the unique identifier representing the lead.
      *
      * @return string
      */
-    public function getHash(): string;
+    public function getIdentifier(): string;
 
     /**
      * Get an attribute from the lead.

@@ -12,7 +12,7 @@ class MockLead implements Lead
     {
     }
 
-    public function getHash(): string
+    public function getIdentifier(): string
     {
         return $this->hash;
     }

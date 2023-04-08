@@ -31,7 +31,7 @@ class MockOffer implements Offer
 
     public function setIneligible(Lead $lead): static
     {
-        $this->ineligible[] = $lead->getHash();
+        $this->ineligible[] = $lead->getIdentifier();
 
         return $this;
     }
@@ -66,7 +66,7 @@ class MockOffer implements Offer
 
     public function isEligible(Lead $lead): bool
     {
-        return ! in_array($lead->getHash(), $this->ineligible);
+        return ! in_array($lead->getIdentifier(), $this->ineligible);
     }
 
     public function isHealthy(): bool
@@ -86,7 +86,7 @@ class MockOffer implements Offer
         }
 
         $response->wasRejected()
-            ? $this->ineligible[] = $lead->getHash()
+            ? $this->ineligible[] = $lead->getIdentifier()
             : $this->healthy = false;
     }
 }

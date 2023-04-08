@@ -52,7 +52,7 @@ class RoundRobin implements Strategy
 
     protected function getCacheKey(Lead $lead): string
     {
-        return sprintf('round-robin:%s', $lead->getHash());
+        return sprintf('round-robin:%s', $lead->getIdentifier());
     }
 
     protected function getPriorityOffers(Lead $lead, array $offers): array
