@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace GrayMatterLabs\PingTree\Support;
 
-use Closure;
-
 trait HasEvents
 {
     protected array $listeners = [];
