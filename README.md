@@ -11,7 +11,7 @@ A Ping Tree is a process in which a single lead is offered to multiple buyers in
 You can install the package via composer:
 
 ```bash
-composer require graymatterlabs/pingtree:^0.3
+composer require graymatterlabs/pingtree:^0.2.0
 ```
 
 ## Usage
@@ -20,13 +20,22 @@ composer require graymatterlabs/pingtree:^0.3
 $tree = new Tree($strategy, $offers);
 
 $response = $tree->ping($lead);
-
-if ($response instanceof RedirectResponse) {
-    redirect($response->getRedirect());
-}
 ```
 
-For examples of usage and implementation, please check out the `tests/` directory.
+### Offers
+Offer instances are responsible for communicating with and managing state of the offer such as health and eligibility rules.
+
+### Responses
+The ping tree will return the first successful response provided by an offer. Responses must implement the `GrayMatterLabs\PingTree\Contracts\Response` interface but should be customized beyond that. For example, an offer that provides a URL to redirect a Lead to on success might return an instance of a custom `RedirectResponse` which might have a `url()` method to expose the URL. Here's how that might be used:
+```php
+$tree = new Tree($strategy, $offers);
+
+$response = $tree->ping($lead);
+
+if ($response instanceof RedirectResponse) {
+  return redirect($response->url());
+}
+```
 
 ### Events
 This package fires events and provides you the ability to register listeners for each. Listeners can be used for performing any custom logic. Listeners are executed synchronously to be sure to handle any potential exceptions.
@@ -34,7 +43,12 @@ This package fires events and provides you the ability to register listeners for
 Listeners can be registered to the Tree class, which handles all events, using the `listen` method, like so:
 ```php
 $tree = new Tree($strategy, $offers);
+
+// listen for any events
 $tree->listen($event, $callable);
+$tree->listen($event, $other_callable);
+
+$response = $tree->ping($lead);
 ```
 
 Below is a list of all events fired, their descriptions, and the parameters passed to any registered listeners.
@@ -49,6 +63,9 @@ Below is a list of all events fired, their descriptions, and the parameters pass
 | `accepted`   | * The offer accepted the lead             | Lead $lead, Offer $offer, Response $response, int $attempt |
 
 \* = will fire a maximum of *once* per execution
+
+### Strategies
+This package provides a concept of "strategies" to decide which offer to send the lead to. A default set of strategies are provided out-of-the-box. The only require to provide your own strategies are that they implement the `GrayMatterLabs\PingTree\Contracts\Strategy` interface.
 
 ## Testing
 
