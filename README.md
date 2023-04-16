@@ -40,6 +40,7 @@ $tree->listen($event, $callable);
 Below is a list of all events fired, their descriptions, and the parameters passed to any registered listeners.
 
 | Name         | Description                               | Parameters                                                 |
+| ------------ | ----------------------------------------- | ---------------------------------------------------------- |
 | `pinging`    | An offer is being selected                | Strategy $strategy, Lead $lead, array $offers              |
 | `sending`    | The lead is being sent to the offer       | Lead $lead, Offer $offer                                   |
 | `attempting` | A request to the offer is being attempted | Lead $lead, Offer $offer, int $attempt                     |

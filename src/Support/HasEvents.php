@@ -8,9 +8,9 @@ trait HasEvents
 {
     protected array $listeners = [];
 
-    public function listen(string $event, callable $closure): void
+    public function listen(string $event, callable $callable): void
     {
-        $this->listeners[$event][] = $closure;
+        $this->listeners[$event][] = $callable;
     }
 
     protected function event(string $event, ...$arguments): void
