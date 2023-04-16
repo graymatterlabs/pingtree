@@ -10,7 +10,7 @@ trait HasEvents
 {
     protected array $listeners = [];
 
-    public function listen(string $event, Closure $closure): void
+    public function listen(string $event, callable $closure): void
     {
         $this->listeners[$event][] = $closure;
     }

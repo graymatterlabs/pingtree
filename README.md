@@ -28,6 +28,27 @@ if ($response instanceof RedirectResponse) {
 
 For examples of usage and implementation, please check out the `tests/` directory.
 
+### Events
+This package fires events and provides you the ability to register listeners for each. Listeners can be used for performing any custom logic. Listeners are executed synchronously to be sure to handle any potential exceptions.
+
+Listeners can be registered to the Tree class, which handles all events, using the `listen` method, like so:
+```php
+$tree = new Tree($strategy, $offers);
+$tree->listen($event, $callable);
+```
+
+Below is a list of all events fired, their descriptions, and the parameters passed to any registered listeners.
+
+| Name         | Description                               | Parameters                                                 |
+| `pinging`    | An offer is being selected                | Strategy $strategy, Lead $lead, array $offers              |
+| `sending`    | The lead is being sent to the offer       | Lead $lead, Offer $offer                                   |
+| `attempting` | A request to the offer is being attempted | Lead $lead, Offer $offer, int $attempt                     |
+| `failed`     | A request to the offer failed             | Lead $lead, Offer $offer, Response $response, int $attempt |
+| `rejected`   | The offer rejected the lead               | Lead $lead, Offer $offer, Response $response, int $attempt |
+| `accepted`   | * The offer accepted the lead             | Lead $lead, Offer $offer, Response $response, int $attempt |
+
+\* = will fire a maximum of *once* per execution
+
 ## Testing
 
 ```bash

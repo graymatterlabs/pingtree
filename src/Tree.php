@@ -79,9 +79,9 @@ class Tree
             $this->event('attempting', $lead, $offer, $attempt);
 
             $response = $offer->send($lead);
-        } while (! $response->success() && $attempt++ < $this->maxTries);
 
-        $this->handleResponse($lead, $offer, $response, $attempt);
+            $this->handleResponse($lead, $offer, $response, $attempt);
+        } while (! $response->success() && $attempt++ < $this->maxTries);
 
         return $response;
     }
