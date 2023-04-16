@@ -58,7 +58,7 @@ class Example implements Offer
 
     public function getIdentifier(): string|int
     {
-        return 1;
+        return 'example';
     }
 
     public function ping(Lead $lead): int
@@ -85,12 +85,12 @@ class Example implements Offer
 
     public function isEligible(Lead $lead): bool
     {
-        return true;
+        return $lead->hasAttribute('email');
     }
     
     public function isHealthy(): bool
     {
-        return true;
+        return $this->http->get($this->url . '/health')->ok();
     }
 }
 ```
@@ -124,6 +124,12 @@ Below is a list of all events fired, their descriptions, and the parameters pass
 
 ### Strategies
 This package provides a concept of "strategies" to decide which offer to send the lead to. A default set of strategies are provided out-of-the-box. The only requirement to providing your own strategies is that they implement the `GrayMatterLabs\PingTree\Contracts\Strategy` interface.
+
+| Strategy    | Description                                                                                  |
+|-------------|----------------------------------------------------------------------------------------------|
+| HighestPing | Gets the offer with the highest `ping()` value                                               |
+| RoundRobin  | A decorator to ensure each offer is attempted across multiple executions for a given lead    |
+| Shuffled    | A decorator to ensure offers with the same `ping()` value are attempted in no specific order |
 
 ## Testing
 
