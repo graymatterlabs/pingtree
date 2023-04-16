@@ -22,11 +22,9 @@ $tree = new Tree($strategy, $offers);
 $response = $tree->ping($lead);
 ```
 
-### Offers
-Offer instances are responsible for communicating with and managing state of the offer such as health and eligibility rules.
-
 ### Responses
-The ping tree will return the first successful response provided by an offer. Responses must implement the `GrayMatterLabs\PingTree\Contracts\Response` interface but should be customized beyond that. For example, an offer that provides a URL to redirect a Lead to on success might return an instance of a custom `RedirectResponse` which might have a `url()` method to expose the URL. Here's how that might be used:
+The ping tree will return the first successful response provided by an offer. Responses must implement the `GrayMatterLabs\PingTree\Contracts\Response` interface but should be customized beyond that.
+
 ```php
 $tree = new Tree($strategy, $offers);
 
@@ -34,6 +32,66 @@ $response = $tree->ping($lead);
 
 if ($response instanceof RedirectResponse) {
   return redirect($response->url());
+}
+```
+
+### Offers
+Offer instances are responsible for communicating with and managing state of the offer such as health and eligibility rules.
+
+```php
+<?php
+
+namespace App\Offers;
+
+use App\Http;
+use GrayMatterLabs\PingTree\Contracts\Offer;
+use GrayMatterLabs\PingTree\Contracts\Lead;
+use GrayMatterLabs\PingTree\Contracts\Response;
+
+class Example implements Offer
+{
+    private string $url = 'https://example.com';
+    
+    public function __construct(private Http $http, private string $key)
+    {
+    }
+
+    public function getIdentifier(): string|int
+    {
+        return 1;
+    }
+
+    public function ping(Lead $lead): int
+    {
+        $response = $this->http
+            ->withHeader('Authorization', $this->key)
+            ->post($this->url . '/value', [
+                // ...
+            ]);
+        
+        return (int) $response->json('value');
+    }
+
+    public function send(Lead $lead): Response
+    {
+        $response = $this->http
+            ->withHeader('Authorization', $this->key)
+            ->post($this->url . '/send', [
+                // ...
+            ]);
+
+        return new RedirectResponse(!$response->ok(), $response->json('accepted'), $response->json('url'));
+    }
+
+    public function isEligible(Lead $lead): bool
+    {
+        return true;
+    }
+    
+    public function isHealthy(): bool
+    {
+        return true;
+    }
 }
 ```
 
@@ -54,7 +112,7 @@ $response = $tree->ping($lead);
 Below is a list of all events fired, their descriptions, and the parameters passed to any registered listeners.
 
 | Name         | Description                               | Parameters                                                 |
-| ------------ | ----------------------------------------- | ---------------------------------------------------------- |
+|--------------|-------------------------------------------|------------------------------------------------------------|
 | `pinging`    | An offer is being selected                | Strategy $strategy, Lead $lead, array $offers              |
 | `sending`    | The lead is being sent to the offer       | Lead $lead, Offer $offer                                   |
 | `attempting` | A request to the offer is being attempted | Lead $lead, Offer $offer, int $attempt                     |
@@ -65,7 +123,7 @@ Below is a list of all events fired, their descriptions, and the parameters pass
 \* = will fire a maximum of *once* per execution
 
 ### Strategies
-This package provides a concept of "strategies" to decide which offer to send the lead to. A default set of strategies are provided out-of-the-box. The only require to provide your own strategies are that they implement the `GrayMatterLabs\PingTree\Contracts\Strategy` interface.
+This package provides a concept of "strategies" to decide which offer to send the lead to. A default set of strategies are provided out-of-the-box. The only requirement to providing your own strategies is that they implement the `GrayMatterLabs\PingTree\Contracts\Strategy` interface.
 
 ## Testing
 
