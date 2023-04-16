@@ -8,14 +8,16 @@ use GrayMatterLabs\PingTree\Contracts\Lead;
 use GrayMatterLabs\PingTree\Contracts\Offer;
 use GrayMatterLabs\PingTree\Contracts\Strategy;
 
-class HighestScore implements Strategy
+class Shuffled implements Strategy
 {
+    public function __construct(protected Strategy $strategy)
+    {
+    }
+
     public function execute(Lead $lead, array $offers): Offer
     {
-        return array_reduce($offers, function (Offer $previous, Offer $offer) use ($lead) {
-            return $previous->ping($lead) > $offer->ping($lead)
-                ? $previous
-                : $offer;
-        });
+        shuffle($offers);
+
+        return $this->strategy->execute($lead, $offers);
     }
 }

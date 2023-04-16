@@ -7,11 +7,11 @@ namespace GrayMatterLabs\PingTree\Contracts;
 interface Lead
 {
     /**
-     * Get the unique identifier representing the lead.
+     * Get the lead's unique identifier.
      *
-     * @return string
+     * @return string|int
      */
-    public function getIdentifier(): string;
+    public function getIdentifier(): string|int;
 
     /**
      * Get an attribute from the lead.
@@ -24,7 +24,7 @@ interface Lead
     public function getAttribute(string $name, mixed $default = null): mixed;
 
     /**
-     * Determine whether the lead has an attribute.
+     * Whether the lead has an attribute.
      *
      * @param string $name
      *
@@ -33,9 +33,9 @@ interface Lead
     public function hasAttribute(string $name): bool;
 
     /**
-     * Get the leads attributes.
+     * Get the lead's attributes.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public function getAttributes(): array;
 }

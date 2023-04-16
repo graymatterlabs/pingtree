@@ -7,7 +7,7 @@ namespace GrayMatterLabs\PingTree\Contracts;
 interface Strategy
 {
     /**
-     * Execute the strategy and return the chosen offer.
+     * Get the offer chosen by the strategy.
      *
      * @param \GrayMatterLabs\PingTree\Contracts\Lead $lead
      * @param \GrayMatterLabs\PingTree\Contracts\Offer[] $offers

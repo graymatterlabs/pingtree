@@ -11,9 +11,7 @@ use Psr\SimpleCache\CacheInterface;
 
 class RoundRobin implements Strategy
 {
-    protected array $pings = [];
-
-    public function __construct(protected CacheInterface $cache)
+    public function __construct(protected CacheInterface $cache, protected Strategy $strategy)
     {
     }
 
@@ -23,22 +21,11 @@ class RoundRobin implements Strategy
 
         if (empty($priority)) {
             $this->reset($lead);
+
             $priority = $offers;
         }
 
-        $offer = array_reduce($priority, function (?Offer $previous, Offer $offer) use ($lead) {
-            if (! isset($this->pings[$offer->getIdentifier()])) {
-                $this->pings[$offer->getIdentifier()] = $offer->ping($lead);
-            }
-
-            if (is_null($previous)) {
-                return $offer;
-            }
-
-            return $this->pings[$previous->getIdentifier()] > $this->pings[$offer->getIdentifier()]
-                ? $previous
-                : $offer;
-        });
+        $offer = $this->strategy->execute($lead, $priority);
 
         $this->deprioritizeOfferForLead($lead, $offer);
 
@@ -70,8 +57,6 @@ class RoundRobin implements Strategy
 
         $seen = $this->cache->get($key, []);
 
-        $seen[] = $offer->getIdentifier();
-
-        $this->cache->set($key, array_unique($seen));
+        $this->cache->set($key, array_unique([...$seen, $offer->getIdentifier()]));
     }
 }

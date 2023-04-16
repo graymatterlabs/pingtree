@@ -7,23 +7,16 @@ namespace GrayMatterLabs\PingTree\Contracts;
 interface Response
 {
     /**
-     * Whether sending the lead failed.
+     * Whether the request was successful.
      *
      * @return bool
      */
-    public function failed(): bool;
+    public function success(): bool;
 
     /**
-     * Whether the lead was rejected.
+     * Whether the lead was accepted.
      *
      * @return bool
      */
-    public function wasRejected(): bool;
-
-    /**
-     * Whether sending the lead should be retried.
-     *
-     * @return bool
-     */
-    public function shouldRetry(): bool;
+    public function accepted(): bool;
 }

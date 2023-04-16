@@ -4,29 +4,21 @@ declare(strict_types=1);
 
 namespace GrayMatterLabs\PingTree\Tests\Mocks;
 
-use GrayMatterLabs\PingTree\Contracts\Response;
+use GrayMatterLabs\PingTree\Contracts\Response as ResponseContract;
 
-class MockResponse implements Response
+class MockResponse implements ResponseContract
 {
-    public function __construct(
-        protected bool $failed = false,
-        protected bool $wasRejected = false,
-        protected bool $shouldRetry = false
-    ) {
+    public function __construct(protected bool $success, protected bool $accepted)
+    {
     }
 
-    public function failed(): bool
+    public function success(): bool
     {
-        return $this->failed;
+        return $this->success;
     }
 
-    public function shouldRetry(): bool
+    public function accepted(): bool
     {
-        return $this->shouldRetry;
-    }
-
-    public function wasRejected(): bool
-    {
-        return $this->wasRejected;
+        return $this->accepted;
     }
 }
