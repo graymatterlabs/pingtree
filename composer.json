@@ -23,7 +23,8 @@
         "phpunit/phpunit": "^9.5"
     },
     "suggest": {
-        "psr/simple-cache": "^3.0"
+        "psr/simple-cache": "^3.0",
+        "graymatterlabs/simple-cache": "^1.1"
     },
     "autoload": {
         "psr-4": {

@@ -16,7 +16,7 @@ class RoundRobinTest extends TestCase
 {
     public function test_it_rotates_through_offers_using_the_given_strategy(): void
     {
-        $lead = new MockLead('hash');
+        $lead = new MockLead('id');
 
         $offers = [
             new MockOffer('offer-name', new MockResponse(true, true), 1),
@@ -39,7 +39,7 @@ class RoundRobinTest extends TestCase
 
     public function test_it_resets_once_running_out_of_offers(): void
     {
-        $lead = new MockLead('hash');
+        $lead = new MockLead('id');
 
         $offers = [
             new MockOffer('offer-name', new MockResponse(true, true)),

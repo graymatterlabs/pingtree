@@ -14,7 +14,7 @@ class HighestPingTest extends TestCase
 {
     public function test_it_gets_the_offer_with_highest_ping(): void
     {
-        $lead = new MockLead('hash');
+        $lead = new MockLead('id');
 
         $offers = [
             new MockOffer('offer-name', new MockResponse(true, true), 1),

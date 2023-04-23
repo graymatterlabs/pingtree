@@ -6,18 +6,19 @@ namespace GrayMatterLabs\PingTree\Tests;
 
 use GrayMatterLabs\PingTree\Contracts\Response;
 use GrayMatterLabs\PingTree\Exceptions\NoOffersException;
+use GrayMatterLabs\PingTree\Strategies\Ordered;
+use GrayMatterLabs\PingTree\Support\LinearBackoff;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockLead;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockOffer;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockResponse;
-use GrayMatterLabs\PingTree\Tests\Mocks\MockStrategy;
-use GrayMatterLabs\PingTree\Tests\Mocks\MockTree;
+use GrayMatterLabs\PingTree\Tree;
 use PHPUnit\Framework\TestCase;
 
 class TreeTest extends TestCase
 {
     public function test_it_sends_a_lead_to_an_offer(): void
     {
-        $lead = new MockLead('hash');
+        $lead = new MockLead('id');
 
         $tree = $this->getTree([
             new MockOffer(
@@ -32,7 +33,7 @@ class TreeTest extends TestCase
 
     public function test_it_throws_an_exception_if_there_are_no_offers(): void
     {
-        $lead = new MockLead('hash');
+        $lead = new MockLead('id');
 
         $tree = $this->getTree([]);
 
@@ -43,7 +44,7 @@ class TreeTest extends TestCase
 
     public function test_it_throws_an_exception_if_there_are_no_healthy_offers(): void
     {
-        $lead = new MockLead('hash');
+        $lead = new MockLead('id');
 
         $tree = $this->getTree([
             new MockOffer('offer-name', new MockResponse(true, true), healthy: false),
@@ -56,7 +57,7 @@ class TreeTest extends TestCase
 
     public function test_it_throws_an_exception_if_there_are_no_eligible_offers(): void
     {
-        $lead = new MockLead('hash');
+        $lead = new MockLead('id');
 
         $tree = $this->getTree([
             new MockOffer('offer-name', new MockResponse(true, true), ineligible: [$lead->getIdentifier()]),
@@ -69,7 +70,7 @@ class TreeTest extends TestCase
 
     public function test_if_an_offer_becomes_unhealthy_it_gets_another(): void
     {
-        $lead = new MockLead('hash');
+        $lead = new MockLead('id');
 
         $offers = [
                 new MockOffer('offer-name', new MockResponse(true, true), healthy: false),
@@ -97,7 +98,7 @@ class TreeTest extends TestCase
 
     public function test_if_a_lead_is_ineligible_for_an_offer_it_gets_another(): void
     {
-        $lead = new MockLead('hash');
+        $lead = new MockLead('id');
 
         $offers = [
             new MockOffer('offer-name', new MockResponse(true, true), ineligible: [$lead->getIdentifier()]),
@@ -125,7 +126,7 @@ class TreeTest extends TestCase
 
     public function test_if_an_offer_fails_it_tries_another(): void
     {
-        $lead = new MockLead('hash');
+        $lead = new MockLead('id');
 
         $offers = [
             new MockOffer('offer-name', new MockResponse(false, false)),
@@ -205,8 +206,8 @@ class TreeTest extends TestCase
         ];
     }
 
-    protected function getTree(array $offers = []): MockTree
+    protected function getTree(array $offers = []): Tree
     {
-        return new MockTree(new MockStrategy(), $offers);
+        return new Tree(new Ordered(), $offers, new LinearBackoff(0));
     }
 }

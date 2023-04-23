@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace GrayMatterLabs\PingTree;
 
+use GrayMatterLabs\PingTree\Contracts\Backoff;
 use GrayMatterLabs\PingTree\Contracts\Lead;
 use GrayMatterLabs\PingTree\Contracts\Offer;
 use GrayMatterLabs\PingTree\Contracts\Response;
 use GrayMatterLabs\PingTree\Contracts\Strategy;
 use GrayMatterLabs\PingTree\Exceptions\NoOffersException;
 use GrayMatterLabs\PingTree\Support\HasEvents;
+use GrayMatterLabs\PingTree\Support\LinearBackoff;
 use GrayMatterLabs\PingTree\Support\Offers;
 
 class Tree
@@ -21,25 +23,26 @@ class Tree
      *
      * @var int
      */
-    protected int $maxTries = 3;
-
-    /**
-     * The number of seconds to multiply by when exponentially backing off after a failed send.
-     *
-     * @var int
-     */
-    protected int $backoff = 1;
+    public int $maxTries = 3;
 
     /**
      * The offers in the ping tree.
      *
      * @var Offers
      */
-    private Offers $offers;
+    protected Offers $offers;
 
-    public function __construct(protected Strategy $strategy, array $offers)
+    /**
+     * The strategy used to backoff between attempts to send to an offer.
+     *
+     * @var Backoff
+     */
+    protected Backoff $backoff;
+
+    public function __construct(protected Strategy $strategy, array $offers, Backoff $backoff = null)
     {
         $this->offers = Offers::wrap($offers);
+        $this->backoff = $backoff ?? new LinearBackoff();
     }
 
     public function ping(Lead $lead, array $except = []): Response
@@ -74,14 +77,12 @@ class Tree
         $this->event('sending', $lead, $offer);
 
         do {
-            $this->backoff($attempt);
-
             $this->event('attempting', $lead, $offer, $attempt);
 
             $response = $offer->send($lead);
 
             $this->handleResponse($lead, $offer, $response, $attempt);
-        } while (! $response->success() && $attempt++ < $this->maxTries);
+        } while (! $response->success() && $this->backoffAndRetry($attempt++));
 
         return $response;
     }
@@ -104,8 +105,14 @@ class Tree
         }
     }
 
-    protected function backoff(int $attempt): void
+    protected function backoffAndRetry(int $attempt): bool
     {
-        sleep(--$attempt * $this->backoff);
+        if ($attempt >= $this->maxTries) {
+            return false;
+        }
+
+        sleep($this->backoff->getWaitInSeconds($attempt));
+
+        return true;
     }
 }

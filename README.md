@@ -11,7 +11,7 @@ A Ping Tree is a process in which a single lead is offered to multiple buyers in
 You can install the package via composer:
 
 ```bash
-composer require graymatterlabs/pingtree:^0.2.0
+composer require graymatterlabs/pingtree:^0.3.0
 ```
 
 ## Usage
@@ -125,11 +125,12 @@ Below is a list of all events fired, their descriptions, and the parameters pass
 ### Strategies
 This package provides a concept of "strategies" to decide which offer to send the lead to. A default set of strategies are provided out-of-the-box. The only requirement to providing your own strategies is that they implement the `GrayMatterLabs\PingTree\Contracts\Strategy` interface.
 
-| Strategy    | Description                                                                                  |
-|-------------|----------------------------------------------------------------------------------------------|
-| HighestPing | Gets the offer with the highest `ping()` value                                               |
-| RoundRobin  | A decorator to ensure each offer is attempted across multiple executions for a given lead    |
-| Shuffled    | A decorator to ensure offers with the same `ping()` value are attempted in no specific order |
+| Strategy    | Description                                                                               |
+|-------------|-------------------------------------------------------------------------------------------|
+| HighestPing | Gets the offer with the highest `ping()` value                                            |
+| RoundRobin  | A decorator to ensure each offer is attempted across multiple executions for a given lead |
+| Shuffled    | A decorator to ensure random order before executing the given strategy                    |
+| Ordered     | Gets the first offer in the list of provided offers                                       |
 
 ## Testing
 

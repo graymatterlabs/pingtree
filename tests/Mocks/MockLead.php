@@ -8,13 +8,13 @@ use GrayMatterLabs\PingTree\Contracts\Lead;
 
 class MockLead implements Lead
 {
-    public function __construct(protected string $hash)
+    public function __construct(protected string $identifier)
     {
     }
 
     public function getIdentifier(): string
     {
-        return $this->hash;
+        return $this->identifier;
     }
 
     public function getAttribute(string $name, mixed $default = null): mixed
