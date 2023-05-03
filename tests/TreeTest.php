@@ -35,7 +35,7 @@ class TreeTest extends TestCase
     {
         $lead = new MockLead('id');
 
-        $tree = $this->getTree([]);
+        $tree = $this->getTree();
 
         $this->expectException(NoOffersException::class);
 

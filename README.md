@@ -44,6 +44,7 @@ Offer instances are responsible for communicating with and managing state of the
 namespace App\Offers;
 
 use App\Http;
+use App\Leads\AutoLead;
 use GrayMatterLabs\PingTree\Contracts\Offer;
 use GrayMatterLabs\PingTree\Contracts\Lead;
 use GrayMatterLabs\PingTree\Contracts\Response;
@@ -61,7 +62,7 @@ class Example implements Offer
         return 'example';
     }
 
-    public function ping(Lead $lead): int
+    public function ping(AutoLead $lead): int
     {
         $response = $this->http
             ->withHeader('Authorization', $this->key)
@@ -72,7 +73,7 @@ class Example implements Offer
         return (int) $response->json('value');
     }
 
-    public function send(Lead $lead): Response
+    public function send(AutoLead $lead): Response
     {
         $response = $this->http
             ->withHeader('Authorization', $this->key)
@@ -83,9 +84,9 @@ class Example implements Offer
         return new RedirectResponse(!$response->ok(), $response->json('accepted'), $response->json('url'));
     }
 
-    public function isEligible(Lead $lead): bool
+    public function isEligible(AutoLead $lead): bool
     {
-        return $lead->hasAttribute('email');
+        return $lead->validate();
     }
     
     public function isHealthy(): bool

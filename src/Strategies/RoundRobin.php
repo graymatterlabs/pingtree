@@ -44,7 +44,7 @@ class RoundRobin implements Strategy
 
     protected function getPriorityOffers(Lead $lead, array $offers): array
     {
-        $seen = $this->cache->get($this->getCacheKey($lead), []);
+        $seen = (array) $this->cache->get($this->getCacheKey($lead));
 
         return array_filter($offers, function (Offer $offer) use ($seen) {
             return ! in_array($offer->getIdentifier(), $seen, false);
@@ -55,7 +55,7 @@ class RoundRobin implements Strategy
     {
         $key = $this->getCacheKey($lead);
 
-        $seen = $this->cache->get($key, []);
+        $seen = (array) $this->cache->get($key);
 
         $this->cache->set($key, array_unique([...$seen, $offer->getIdentifier()]));
     }
