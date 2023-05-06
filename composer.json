@@ -18,9 +18,10 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.0",
+        "graymatterlabs/simple-cache": "^1.1",
+        "nunomaduro/phpinsights": "^2.8",
         "phpstan/phpstan": "^1.10",
-        "phpunit/phpunit": "^9.5",
-        "graymatterlabs/simple-cache": "^1.1"
+        "phpunit/phpunit": "^9.5"
     },
     "suggest": {
         "psr/simple-cache": "^3.0",
@@ -43,7 +44,10 @@
         "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes"
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": false
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

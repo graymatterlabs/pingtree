@@ -14,6 +14,9 @@ class Shuffled implements Strategy
     {
     }
 
+    /**
+     * @param array<Offer> $offers
+     */
     public function execute(Lead $lead, array $offers): Offer
     {
         shuffle($offers);

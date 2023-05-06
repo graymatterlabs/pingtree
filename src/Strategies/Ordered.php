@@ -10,6 +10,9 @@ use GrayMatterLabs\PingTree\Contracts\Strategy;
 
 class Ordered implements Strategy
 {
+    /**
+     * @param array<Offer> $offers
+     */
     public function execute(Lead $lead, array $offers): Offer
     {
         return array_values($offers)[0];

@@ -7,7 +7,7 @@ namespace GrayMatterLabs\PingTree\Exceptions;
 use Exception;
 use GrayMatterLabs\PingTree\Contracts\Lead;
 
-class NoOffersException extends Exception
+class NoOffers extends Exception
 {
     public function __construct(Lead $lead)
     {

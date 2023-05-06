@@ -8,8 +8,6 @@ interface Lead
 {
     /**
      * Get the lead's unique identifier.
-     *
-     * @return string|int
      */
     public function getIdentifier(): string|int;
 }

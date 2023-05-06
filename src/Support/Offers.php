@@ -9,6 +9,7 @@ use GrayMatterLabs\PingTree\Contracts\Offer;
 
 final class Offers
 {
+    /** @var array<Offer> */
     private array $offers;
 
     public function __construct(Offer ...$offers)
@@ -16,6 +17,9 @@ final class Offers
         $this->offers = $offers;
     }
 
+    /**
+     * @param array<Offer> $offers
+     */
     public static function wrap(array $offers): Offers
     {
         return new self(...$offers);
@@ -23,19 +27,22 @@ final class Offers
 
     public function healthy(): Offers
     {
-        return self::wrap(array_filter($this->offers, fn ($offer) => $offer->isHealthy()));
+        return self::wrap(array_filter($this->offers, static fn ($offer) => $offer->isHealthy()));
     }
 
     public function eligible(Lead $lead): Offers
     {
-        return self::wrap(array_filter($this->offers, fn ($offer) => $offer->isEligible($lead)));
+        return self::wrap(array_filter($this->offers, static fn ($offer) => $offer->isEligible($lead)));
     }
 
+    /**
+     * @param array<Offer> $offers
+     */
     public function except(array $offers): Offers
     {
         $identifiers = self::wrap($offers)->toIdentifiers();
 
-        return self::wrap(array_filter($this->offers, fn ($offer) => ! in_array($offer->getIdentifier(), $identifiers, true)));
+        return self::wrap(array_filter($this->offers, static fn ($offer) => ! in_array($offer->getIdentifier(), $identifiers, true)));
     }
 
     public function unique(): Offers
@@ -54,11 +61,17 @@ final class Offers
         return empty($this->offers);
     }
 
+    /**
+     * @return array<string|int>
+     */
     public function toIdentifiers(): array
     {
-        return array_map(fn (Offer $offer) => $offer->getIdentifier(), $this->offers);
+        return array_map(static fn (Offer $offer) => $offer->getIdentifier(), $this->offers);
     }
 
+    /**
+     * @return array<Offer>
+     */
     public function toArray(): array
     {
         return $this->offers;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace GrayMatterLabs\PingTree\Tests;
 
 use GrayMatterLabs\PingTree\Contracts\Response;
-use GrayMatterLabs\PingTree\Exceptions\NoOffersException;
+use GrayMatterLabs\PingTree\Exceptions\NoOffers;
 use GrayMatterLabs\PingTree\Strategies\Ordered;
 use GrayMatterLabs\PingTree\Support\LinearBackoff;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockLead;
@@ -37,7 +37,7 @@ class TreeTest extends TestCase
 
         $tree = $this->getTree();
 
-        $this->expectException(NoOffersException::class);
+        $this->expectException(NoOffers::class);
 
         $tree->ping($lead);
     }
@@ -50,7 +50,7 @@ class TreeTest extends TestCase
             new MockOffer('offer-name', new MockResponse(true, true), healthy: false),
         ]);
 
-        $this->expectException(NoOffersException::class);
+        $this->expectException(NoOffers::class);
 
         $tree->ping($lead);
     }
@@ -63,7 +63,7 @@ class TreeTest extends TestCase
             new MockOffer('offer-name', new MockResponse(true, true), ineligible: [$lead->getIdentifier()]),
         ]);
 
-        $this->expectException(NoOffersException::class);
+        $this->expectException(NoOffers::class);
 
         $tree->ping($lead);
     }
@@ -170,7 +170,7 @@ class TreeTest extends TestCase
         }
 
         if (! $response->accepted()) {
-            $this->expectException(NoOffersException::class);
+            $this->expectException(NoOffers::class);
         }
 
         $tree->ping($lead);

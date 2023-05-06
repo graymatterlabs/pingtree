@@ -9,7 +9,7 @@ use GrayMatterLabs\PingTree\Contracts\Lead;
 use GrayMatterLabs\PingTree\Contracts\Offer;
 use GrayMatterLabs\PingTree\Contracts\Response;
 use GrayMatterLabs\PingTree\Contracts\Strategy;
-use GrayMatterLabs\PingTree\Exceptions\NoOffersException;
+use GrayMatterLabs\PingTree\Exceptions\NoOffers;
 use GrayMatterLabs\PingTree\Support\HasEvents;
 use GrayMatterLabs\PingTree\Support\LinearBackoff;
 use GrayMatterLabs\PingTree\Support\Offers;
@@ -20,26 +20,23 @@ class Tree
 
     /**
      * The number of times to attempt sending a lead to an offer.
-     *
-     * @var int
      */
     public int $maxTries = 3;
 
     /**
      * The offers in the ping tree.
-     *
-     * @var Offers
      */
     protected Offers $offers;
 
     /**
      * The strategy used to backoff between attempts to send to an offer.
-     *
-     * @var Backoff
      */
     protected Backoff $backoff;
 
-    public function __construct(protected Strategy $strategy, array $offers, Backoff $backoff = null)
+    /**
+     * @param array<Offer> $offers
+     */
+    public function __construct(protected Strategy $strategy, array $offers, ?Backoff $backoff = null)
     {
         $this->offers = Offers::wrap($offers);
         $this->backoff = $backoff ?? new LinearBackoff();
@@ -54,7 +51,7 @@ class Tree
             ->unique();
 
         if ($offers->isEmpty()) {
-            throw new NoOffersException($lead);
+            throw new NoOffers($lead);
         }
 
         $this->event('pinging', $this->strategy, $lead, $offers->toArray());
