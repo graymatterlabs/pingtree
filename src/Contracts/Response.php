@@ -7,12 +7,12 @@ namespace GrayMatterLabs\PingTree\Contracts;
 interface Response
 {
     /**
-     * Whether the request was successful.
+     * Whether the request to the offer was successful.
      */
     public function success(): bool;
 
     /**
-     * Whether the lead was accepted.
+     * Whether the lead was accepted by the offer.
      */
     public function accepted(): bool;
 }

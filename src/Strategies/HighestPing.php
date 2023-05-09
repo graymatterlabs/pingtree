@@ -8,7 +8,7 @@ use GrayMatterLabs\PingTree\Contracts\Lead;
 use GrayMatterLabs\PingTree\Contracts\Offer;
 use GrayMatterLabs\PingTree\Contracts\Strategy;
 
-class HighestPing implements Strategy
+final class HighestPing implements Strategy
 {
     /**
      * @param array<Offer> $offers

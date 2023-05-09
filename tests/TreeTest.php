@@ -7,7 +7,6 @@ namespace GrayMatterLabs\PingTree\Tests;
 use GrayMatterLabs\PingTree\Contracts\Response;
 use GrayMatterLabs\PingTree\Exceptions\NoOffers;
 use GrayMatterLabs\PingTree\Strategies\Ordered;
-use GrayMatterLabs\PingTree\Support\LinearBackoff;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockLead;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockOffer;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockResponse;
@@ -86,8 +85,10 @@ class TreeTest extends TestCase
             $events[] = $offer;
         });
 
-        $tree->listen('accepted', function ($lead, $offer, $response) use (&$selected) {
-            $selected = $offer;
+        $tree->listen('sent', function ($lead, $offer, $response) use (&$selected) {
+            if ($response->accepted()) {
+                $selected = $offer;
+            }
         });
 
         $tree->ping($lead);
@@ -114,8 +115,10 @@ class TreeTest extends TestCase
             $events[] = $offer;
         });
 
-        $tree->listen('accepted', function ($lead, $offer, $response) use (&$selected) {
-            $selected = $offer;
+        $tree->listen('sent', function ($lead, $offer, $response) use (&$selected) {
+            if ($response->accepted()) {
+                $selected = $offer;
+            }
         });
 
         $tree->ping($lead);
@@ -142,8 +145,10 @@ class TreeTest extends TestCase
             $events[] = $offer;
         });
 
-        $tree->listen('accepted', function ($lead, $offer, $response) use (&$selected) {
-            $selected = $offer;
+        $tree->listen('sent', function ($lead, $offer, $response) use (&$selected) {
+            if ($response->accepted()) {
+                $selected = $offer;
+            }
         });
 
         $tree->ping($lead);
@@ -184,30 +189,30 @@ class TreeTest extends TestCase
     {
         return [
             'Accepted lead' => [new MockResponse(true, true), [
-                'pinging',
+                'selecting',
+                'selected',
                 'sending',
-                'attempting',
-                'accepted',
+                'sent',
             ]],
 
             'Failed offer' => [new MockResponse(false, false), [
-                'pinging',
+                'selecting',
+                'selected',
                 'sending',
-                'attempting',
-                'failed',
+                'sent',
             ]],
 
             'Rejected lead' => [new MockResponse(true, false), [
-                'pinging',
+                'selecting',
+                'selected',
                 'sending',
-                'attempting',
-                'rejected',
+                'sent',
             ]],
         ];
     }
 
-    protected function getTree(array $offers = []): Tree
+    private function getTree(array $offers = []): Tree
     {
-        return new Tree(new Ordered(), $offers, new LinearBackoff(0));
+        return new Tree(new Ordered(), $offers, 1);
     }
 }

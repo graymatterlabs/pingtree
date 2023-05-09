@@ -12,13 +12,12 @@ use GrayMatterLabs\PingTree\Contracts\Response;
 class MockOffer implements Offer
 {
     public function __construct(
-        protected string   $name,
-        protected Response $response,
-        protected int      $ping = 1,
-        protected array    $ineligible = [],
-        protected bool     $healthy = true,
-        protected ?Closure $sendCallback = null,
-        protected ?Closure $notifyCallback = null
+        private string   $name,
+        private Response $response,
+        private int      $ping = 1,
+        private array    $ineligible = [],
+        private bool     $healthy = true,
+        private ?Closure $sendCallback = null,
     ) {
     }
 

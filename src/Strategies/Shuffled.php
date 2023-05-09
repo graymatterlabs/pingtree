@@ -8,9 +8,9 @@ use GrayMatterLabs\PingTree\Contracts\Lead;
 use GrayMatterLabs\PingTree\Contracts\Offer;
 use GrayMatterLabs\PingTree\Contracts\Strategy;
 
-class Shuffled implements Strategy
+final class Shuffled implements Strategy
 {
-    public function __construct(protected Strategy $strategy)
+    public function __construct(private Strategy $strategy)
     {
     }
 

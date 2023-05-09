@@ -9,7 +9,7 @@ interface Strategy
     /**
      * Get the offer chosen by the strategy.
      *
-     * @param array<\GrayMatterLabs\PingTree\Contracts\Offer> $offers
+     * @param array<Offer> $offers
      */
     public function execute(Lead $lead, array $offers): Offer;
 }

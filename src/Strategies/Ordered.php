@@ -8,7 +8,7 @@ use GrayMatterLabs\PingTree\Contracts\Lead;
 use GrayMatterLabs\PingTree\Contracts\Offer;
 use GrayMatterLabs\PingTree\Contracts\Strategy;
 
-class Ordered implements Strategy
+final class Ordered implements Strategy
 {
     /**
      * @param array<Offer> $offers

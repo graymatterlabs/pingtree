@@ -27,12 +27,12 @@ final class Offers
 
     public function healthy(): Offers
     {
-        return self::wrap(array_filter($this->offers, static fn ($offer) => $offer->isHealthy()));
+        return self::wrap(array_filter($this->offers, static fn (Offer $offer) => $offer->isHealthy()));
     }
 
     public function eligible(Lead $lead): Offers
     {
-        return self::wrap(array_filter($this->offers, static fn ($offer) => $offer->isEligible($lead)));
+        return self::wrap(array_filter($this->offers, static fn (Offer $offer) => $offer->isEligible($lead)));
     }
 
     /**
@@ -42,7 +42,7 @@ final class Offers
     {
         $identifiers = self::wrap($offers)->toIdentifiers();
 
-        return self::wrap(array_filter($this->offers, static fn ($offer) => ! in_array($offer->getIdentifier(), $identifiers, true)));
+        return self::wrap(array_filter($this->offers, static fn (Offer $offer) => ! in_array($offer->getIdentifier(), $identifiers, true)));
     }
 
     public function unique(): Offers

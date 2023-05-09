@@ -112,16 +112,12 @@ $response = $tree->ping($lead);
 
 Below is a list of all events fired, their descriptions, and the parameters passed to any registered listeners.
 
-| Name         | Description                               | Parameters                                                 |
-|--------------|-------------------------------------------|------------------------------------------------------------|
-| `pinging`    | An offer is being selected                | Strategy $strategy, Lead $lead, array $offers              |
-| `sending`    | The lead is being sent to the offer       | Lead $lead, Offer $offer                                   |
-| `attempting` | A request to the offer is being attempted | Lead $lead, Offer $offer, int $attempt                     |
-| `failed`     | A request to the offer failed             | Lead $lead, Offer $offer, Response $response, int $attempt |
-| `rejected`   | The offer rejected the lead               | Lead $lead, Offer $offer, Response $response, int $attempt |
-| `accepted`   | * The offer accepted the lead             | Lead $lead, Offer $offer, Response $response, int $attempt |
-
-\* = will fire a maximum of *once* per execution
+| Name        | Description                         | Parameters                                                  |
+|-------------|-------------------------------------|-------------------------------------------------------------|
+| `selecting` | An offer is being selected          | Strategy $strategy, Lead $lead, array $offers               |
+| `selected`  | An offer has been selected          | Strategy $strategy, Lead $lead, array $offers, Offer $offer |
+| `sending`   | The lead is being sent to the offer | Lead $lead, Offer $offer                                    |
+| `sent`      | The lead has been send to the offer | Lead $lead, Offer $offer, Response $response, int $attempts |
 
 ### Strategies
 This package provides a concept of "strategies" to decide which offer to send the lead to. A default set of strategies are provided out-of-the-box. The only requirement to providing your own strategies is that they implement the `GrayMatterLabs\PingTree\Contracts\Strategy` interface.

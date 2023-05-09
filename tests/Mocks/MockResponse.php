@@ -8,7 +8,7 @@ use GrayMatterLabs\PingTree\Contracts\Response as ResponseContract;
 
 class MockResponse implements ResponseContract
 {
-    public function __construct(protected bool $success, protected bool $accepted)
+    public function __construct(private bool $success, private bool $accepted)
     {
     }
 

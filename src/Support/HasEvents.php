@@ -20,7 +20,7 @@ trait HasEvents
     /**
      * Dispatch the event with the arguments provided.
      */
-    protected function event(string $event, ...$arguments): void
+    protected function dispatch(string $event, ...$arguments): void
     {
         foreach ($this->listeners($event) as $listener) {
             $listener(...$arguments);

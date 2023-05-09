@@ -10,9 +10,9 @@ use GrayMatterLabs\PingTree\Contracts\Strategy;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 
-class RoundRobin implements Strategy
+final class RoundRobin implements Strategy
 {
-    public function __construct(protected CacheInterface $cache, protected Strategy $strategy)
+    public function __construct(private CacheInterface $cache, private Strategy $strategy)
     {
     }
 
@@ -47,12 +47,12 @@ class RoundRobin implements Strategy
         $this->cache->set($key, array_unique([...$seen, $offer->getIdentifier()]));
     }
 
-    protected function reset(Lead $lead): void
+    private function reset(Lead $lead): void
     {
         $this->cache->delete($this->getCacheKey($lead));
     }
 
-    protected function getCacheKey(Lead $lead): string
+    private function getCacheKey(Lead $lead): string
     {
         return sprintf('round-robin:%s', $lead->getIdentifier());
     }
@@ -64,7 +64,7 @@ class RoundRobin implements Strategy
      *
      * @throws InvalidArgumentException
      */
-    protected function getPriorityOffers(Lead $lead, array $offers): array
+    private function getPriorityOffers(Lead $lead, array $offers): array
     {
         $seen = (array) $this->cache->get($this->getCacheKey($lead));
 

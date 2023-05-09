@@ -8,7 +8,7 @@ use GrayMatterLabs\PingTree\Contracts\Lead;
 
 class MockLead implements Lead
 {
-    public function __construct(protected string $identifier)
+    public function __construct(private string $identifier)
     {
     }
 
