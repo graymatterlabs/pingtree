@@ -9,6 +9,7 @@ use GrayMatterLabs\PingTree\Contracts\Offer;
 use GrayMatterLabs\PingTree\Contracts\Response;
 use GrayMatterLabs\PingTree\Contracts\Strategy;
 use GrayMatterLabs\PingTree\Exceptions\NoOffers;
+use GrayMatterLabs\PingTree\Support\BackoffAndRetry;
 use GrayMatterLabs\PingTree\Support\HasEvents;
 use GrayMatterLabs\PingTree\Support\Offers;
 
@@ -19,11 +20,8 @@ final class Tree
     /**
      * @param array<Offer> $offers
      */
-    public function __construct(
-        private Strategy $strategy,
-        private array $offers,
-        private int $maxAttemptsPerOffer = 3,
-    ) {
+    public function __construct(private Strategy $strategy, private array $offers)
+    {
     }
 
     /**
@@ -72,24 +70,10 @@ final class Tree
         do {
             $response = $offer->send($lead);
             $attempts++;
-        } while (! $response->success() && $this->backoffAndRetry($attempts));
+        } while (! $response->success() && (new BackoffAndRetry())->handle($attempts));
 
         $this->dispatch('sent', $lead, $offer, $response, $attempts);
 
         return $response;
-    }
-
-    /**
-     * Whether to retry sending the lead to the offer and optionally sleep if so.
-     */
-    private function backoffAndRetry(int $attempt): bool
-    {
-        if ($attempt >= $this->maxAttemptsPerOffer) {
-            return false;
-        }
-
-        sleep($attempt);
-
-        return true;
     }
 }
