@@ -7,7 +7,6 @@ namespace GrayMatterLabs\PingTree\Tests;
 use GrayMatterLabs\PingTree\Contracts\Response;
 use GrayMatterLabs\PingTree\Exceptions\NoOffers;
 use GrayMatterLabs\PingTree\Strategies\Ordered;
-use GrayMatterLabs\PingTree\Support\BackoffAndRetry;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockLead;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockOffer;
 use GrayMatterLabs\PingTree\Tests\Mocks\MockResponse;
@@ -16,11 +15,6 @@ use PHPUnit\Framework\TestCase;
 
 class TreeTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
-    {
-        BackoffAndRetry::setMaxAttempts(1);
-    }
-
     public function test_it_sends_a_lead_to_an_offer(): void
     {
         $lead = new MockLead('id');
@@ -219,6 +213,6 @@ class TreeTest extends TestCase
 
     private function getTree(array $offers = []): Tree
     {
-        return new Tree(new Ordered(), $offers);
+        return new Tree(new Ordered(), $offers, 1);
     }
 }
